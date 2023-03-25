@@ -187,7 +187,7 @@ def dp1(atoms,S,V):     # call S,V by value
             print("V after we propogated the False value for the atom:", VCopy)
             return(dp1(atoms,S1,VCopy))     # Either found a satisfying valuation or backtrack
             # end dp1
-        atomToAssign += 1    
+        atomToAssign += 1
 
 
 def propagate(atom,S,V):
@@ -211,32 +211,6 @@ def propagate(atom,S,V):
     
     return S
 
-'''
-def propagate(atom,S,V):
-    clausesToDelete = []
-    atomInClausesToDelete = []
-    for index in range(len(S)):
-        if (atom in S[index] and V[atom] == True) or (atom*-1 in S[index] and V[atom] == False):
-            #print("HERE")
-            clausesToDelete.append(S[index])
-        elif (atom in S[index] and V[atom] == False):
-            #print("OR HERE")
-            atomInClausesToDelete.append([index, atom])
-        elif (atom*-1 in S[index] and V[atom] == True):
-            #print("HERE 3")
-            atomInClausesToDelete.append([index, atom*-1])
-    #print("Atom Indices:", atomInClausesToDelete)
-    #print("clause Indices:", clausesToDelete)
-    for clauseIndex, atom in atomInClausesToDelete:
-        S[clauseIndex].remove(atom)
-        #print("new S:", S)
-    for clause in clausesToDelete:
-        #print("S inside:", S)
-        S.remove(clause)
-    #print("new new S:", S)
-    
-    return S
-'''
 
 # Given a literal L with atom A, make V[A] the sign indicated by L.
 def obviousAssign(atom, literal, V):
@@ -280,13 +254,31 @@ def dpll_main():
     #print("atoms, S:", atoms, S)
     result = dpll_algo(atoms, S)
 
-    for atom in result:
-        print(atom, end=" ")
-        if result[atom] == False:
-            print("F")
-        elif result[atom] == True:
-            print("T")
+    '''
+    if result != "NIL":
+        for atom in result:
+            print(atom, end=" ")
+            if result[atom] == False:
+                print("F")
+            elif result[atom] == True:
+                print("T")
+    # if no solution found for input clauses, simply output 0
     print("0", end="")
     print(inputBackMatter)
+    '''
+    
+    # output result into a new file called dpll_output.txt
+    f = open("dpll_output.txt", "w")
+    if result != "NIL":
+        for atom in result:
+            f.write(str(atom) + " ")
+            if result[atom] == False:
+                f.write("F\n")
+            elif result[atom] == True:
+                f.write("T\n")
+    # if no solution found for input clauses, simply output 0
+    f.write("0")
+    f.write(inputBackMatter)
+    f.close()
 
 dpll_main()
